@@ -320,18 +320,15 @@ namespace Reko.Core.Output
             }
         }
 
-		public void VisitMkSequence(MkSequence seq)
-		{
-			InnerFormatter.Write("SEQ(");
-            var sep = "";
-            foreach (var e in seq.Expressions)
-            {
-                InnerFormatter.Write(sep);
-                sep = ", ";
-                WriteExpression(e);
-            }
-			InnerFormatter.Write(")");
-		}
+        public void VisitConversion(Conversion conversion)
+        {
+            InnerFormatter.Write("CONVERT(");
+            var trf = new TypeReferenceFormatter(InnerFormatter);
+            trf.WriteTypeReference(conversion.DataType);
+            InnerFormatter.Write(", ");
+            trf.WriteTypeReference(conversion.SourceDataType);
+            InnerFormatter.Write(")");
+        }
 
 		public void VisitDereference(Dereference deref)
 		{
@@ -411,6 +408,19 @@ namespace Reko.Core.Output
             Debug.Assert(access.DataType != null);
             InnerFormatter.Write(access.DataType?.ToString() ?? "");
             InnerFormatter.Write("]");
+        }
+
+        public void VisitMkSequence(MkSequence seq)
+        {
+            InnerFormatter.Write("SEQ(");
+            var sep = "";
+            foreach (var e in seq.Expressions)
+            {
+                InnerFormatter.Write(sep);
+                sep = ", ";
+                WriteExpression(e);
+            }
+            InnerFormatter.Write(")");
         }
 
         public void VisitOutArgument(OutArgument outArg)

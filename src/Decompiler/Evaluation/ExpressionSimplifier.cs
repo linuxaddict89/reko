@@ -581,6 +581,11 @@ namespace Reko.Evaluation
             return c;
         }
 
+        public virtual Expression VisitConversion(Conversion conversion)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual Expression VisitDereference(Dereference deref)
         {
             var e = deref.Expression.Accept(this);
